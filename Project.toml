@@ -1,0 +1,21 @@
+name = "UVITTools"
+uuid = "bee8f34e-611d-499e-97b4-2f0d2901cb64"
+authors = ["Gulab Dewangan <gulabd@iucaa.in>"]
+version = "0.1.0"
+
+[deps]
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
+FITSIO = "525bcba6-941b-5504-bd06-fd0dc1a4d2eb"
+Measurements = "eff96d63-e80a-5855-80a2-b1b0885c5ab7"
+SmoothingSplines = "102930c3-cf33-599f-b3b1-9a29a5acab30"
+
+[compat]
+DataFrames = "1.0, 1.5"
+julia = "1.5, 1.9"
+SmoothingSplines = "0.2.1, 0.3.1"
+Measurements = "2.0, 2.9"
+DelimitedFiles = "1.8,1.9"
+FITSIO = "0.16,0.17"
+
