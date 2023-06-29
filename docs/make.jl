@@ -1,5 +1,4 @@
 
-import Pkg; Pkg.add("Documenter")
 using UVITTools
 using Documenter
 
@@ -13,6 +12,6 @@ makedocs(
                 "Home" => "index.md"
                ])
 deploydocs(;
-    repo="github.com/gulabd/UVITTools.jl",
+    repo="github.com/gulabd/UVITTools.jl.git",
     devbranch = "main"
 )
