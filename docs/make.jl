@@ -1,3 +1,5 @@
+
+import Pkg; Pkg.add("Documenter")
 using UVITTools
 using Documenter
 
