@@ -1,11 +1,7 @@
-
-
-
-
 using FITSIO, FITSIO.Libcfitsio, Dierckx, Measurements, DelimitedFiles,  SmoothingSplines, Dates
 
 """
-   `fuv_grating2_count_spec(fuv_grating2_image_file, ds9regfile[, order = -1, cross_disp_width_pixels = 50, rate = true, outfile="fuv_grating2_count_spec.dat"])` 
+    `fuv_grating2_count_spec(fuv_grating2_image_file, ds9regfile[, order=-2, disp_aligned_to_xaxis=false, angle_xaxis_disp_deg=267.479, cross_disp_width_pixels=40, rate=true])`
 
 Extract count rate spectrum from AstroSat/UVIT FUV-Grating2 dispersed image generated from CCDLAB processing pipeline.
 
@@ -166,7 +162,6 @@ end
 
 
 """
-
    `fuv_grating2_net_countrate_spec(fuv_grating2_image_file, ds9srcregfile, ds9bgdregfile[, order = -2, cross_disp_width_pixels = 50,  outfile="fuv_grating2_net_countrate_spec.dat"])` 
 
 Extract background corrected, net count rate spectrum from AstroSat/UVIT FUV-Grating2 dispersed image generated from CCDLAB processing pipeline.

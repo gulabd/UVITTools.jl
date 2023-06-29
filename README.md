@@ -36,19 +36,7 @@ julia> ?UVITTools
 List of tool to analyze data from the AstroSat/UVIT payload.
 
 
-## Unit conversions
-- `lambdaA2keV`
-- `lambdaA2ergs`
-- `flux_density_photons2cgs`
-- `flux_density_cgs2photons`
 
-##  UVIT Photometry 
-- `read_ds9reg`
-- `uvit_aphot `
-- `uvit_countrate2flux `
-- `uvit_filter2pha`
-- `uvit_saturation_corr`
-- `uvit_zp_uc`
 
 ## Grating Spectroscopy
 - `xycen_from_ds9reg`
@@ -75,6 +63,23 @@ List of tool to analyze data from the AstroSat/UVIT payload.
 - `nuv_grating_m1_flux_calib `
 - `nuv_grating_m1_fluxed_spec`
 - `nuv_grating_phafile`
+
+
+##  UVIT Photometry 
+- `read_ds9reg`
+- `uvit_aphot `
+- `uvit_countrate2flux `
+- `uvit_filter2pha`
+- `uvit_saturation_corr`
+- `uvit_zp_uc`
+
+## Unit conversions
+- `lambdaA2keV`
+- `lambdaA2ergs`
+- `flux_density_photons2cgs`
+- `flux_density_cgs2photons`
+
+
 
 To see the help for any tool (e.g., `nuv_grating_phafile`), type
 
@@ -124,7 +129,7 @@ Dict{String, Vector{T} where T}("GROUPING" => Int16[1], "COUNTS" => [255.1663337
 
   To extract the fluxed spectrum in the -2 order of FUV-Grating1, type 
 ```julia
- julia> (lam, flam, err_flam) = fuv_grating1_fluxed_spec("ngc40", "NGC40_FUV_Grating1_IMAGE.fits","src.reg","bgd.reg")
+ julia> (lam, flam, err_flam) = fuv_grating1_fluxed_spec("ngc40", "NGC40_FUV_Grating1_IMAGE.fits","src.reg","bgd.reg", order=-2, cross_disp_width_pixels = 40, angle_xaxis_disp_deg=0.0)
 -----------------------------------
 target=ngc40
 UVIT channel=FUV
@@ -147,7 +152,7 @@ julia> plot(lam,flam,yerr=err_flam)
 To extract XSPEC-style PHA spectral files, type
 
 ```julia
-julia> fuv_grating1_phafile("ngc40", "NGC40_FUV_Grating1_IMAGE.fits","src.reg","bgd.reg")
+julia> fuv_grating1_phafile("ngc40", "NGC40_FUV_Grating1_IMAGE.fits","src.reg","bgd.reg", order=-2, cross_disp_width_pixel = 40, angle_xaxis_disp_deg=0.0)
 -----------------------------------
 target=ngc40
 UVIT channel=FUV

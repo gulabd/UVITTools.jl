@@ -2,20 +2,6 @@
 List of tool to analyze data from the AstroSat/UVIT payload.
 
 
-## Unit conversions
-- `lambdaA2keV`
-- `lambdaA2ergs`
-- `flux_density_photons2cgs`
-- `flux_density_cgs2photons`
-
-##  UVIT Photometry 
-- `read_ds9reg`
-- `uvit_aphot `
-- `uvit_countrate2flux `
-- `uvit_filter2pha`
-- `uvit_saturation_corr`
-- `uvit_zp_uc`
-
 ## Grating Spectroscopy
 - `xycen_from_ds9reg`
 - `write_uvit_grating_phafile`
@@ -42,6 +28,23 @@ List of tool to analyze data from the AstroSat/UVIT payload.
 - `nuv_grating_m1_fluxed_spec`
 - `nuv_grating_phafile`
 
+
+##  UVIT Photometry 
+- `read_ds9reg`
+- `uvit_aphot `
+- `uvit_countrate2flux `
+- `uvit_filter2pha`
+- `uvit_saturation_corr`
+- `uvit_zp_uc`
+
+## Unit conversions
+- `lambdaA2keV`
+- `lambdaA2ergs`
+- `flux_density_photons2cgs`
+- `flux_density_cgs2photons`
+
+
+
 To see the help for any tool (e.g., `nuv_grating_phafile`), type
 
 ```julia
@@ -51,11 +54,11 @@ help?> nuv_grating_phafile
 """
 module UVITTools
 
-using DelimitedFiles
-export DelimitedFiles, readdlm, writedlm
-using Measurements
-using Plots
-using DataFrames
+using DataFrames, FITSIO, Measurements,  DelimitedFiles, SmoothingSplines, Dates, CSV
+# export DelimitedFiles, readdlm, writedlm
+
+# using Plots
+#using DataFrames
 
 # General purpose tools
 
@@ -115,8 +118,8 @@ export lambdaA2keV, lambdaA2ergs, flux_density_photons2cgs, flux_density_cgs2pho
 	include("xycen_from_ds9reg.jl")
 	include("write_uvit_grating_phafile.jl")
 	include("fuv_grating1_spectroscopy.jl")
-	#include("fuv_grating2_spectroscopy.jl")
-	#include("nuv_grating_spectroscopy.jl")
+	include("fuv_grating2_spectroscopy.jl")
+	include("nuv_grating_spectroscopy.jl")
 	include("uvit_lc_from_orbitwise_images.jl")
 
 	export xycen_from_ds9reg
