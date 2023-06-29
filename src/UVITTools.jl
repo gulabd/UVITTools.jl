@@ -54,7 +54,7 @@ help?> nuv_grating_phafile
 """
 module UVITTools
 
-using DataFrames, FITSIO, Measurements,  DelimitedFiles, SmoothingSplines, Dates, CSV
+using DataFrames, FITSIO, Measurements,  DelimitedFiles, SmoothingSplines, Dates, CSV, Dierckx
 # export DelimitedFiles, readdlm, writedlm
 
 # using Plots
