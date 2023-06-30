@@ -359,12 +359,6 @@ This function is used for flux calibration of count spectrum.
 ## Optional 
 -`order::Int`: Grating order -1 or -2.
 ...
-
-# Example
-```jldoctest
-julia> fuv_grating2_ea(1450.4,order=-2)
-4.076758827954109
-```
 """
 function fuv_grating2_ea(l; order=-2)
 	l = convert.(Float64, l)

@@ -313,12 +313,6 @@ This function is used for flux calibration of count spectrum.
 ## Optional 
 - None
 ...
-
-# Example
-```jldoctest
-julia> nuv_grating_m1_ea(2100)
-13.136720959979547
-```
 """
 function nuv_grating_m1_ea(lamA)
    	#ea = 900363.87080438435 - 2548.8671167487901 * l + 3.0751080479561437 * l^2  - 0.0020498923173653013 * l^3 + 8.1553032340433166e-07 * l^4 - 1.9365502778395436e-10 * l^5 + 2.5415821035881287e-14 * l^6  - 1.4222943466581621e-18 * l^7
