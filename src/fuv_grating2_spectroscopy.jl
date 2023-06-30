@@ -572,7 +572,7 @@ ea_cm2 = [0.075906  , 0.10787247, 0.13749315, 0.16509385, 0.19098686,
 
 # Read effective area based on WD0308_crreject data
 
-f = FITS("./caldata/fuv_grating2m2_effarea_12nov22.fits")
+f = FITS("/home/gulabd/work/julia_dev/UVITTools/src/caldata/fuv_grating2m2_effarea_12nov22.fits")
 ea_lamA = read(f[2], "X")
 ea_cm2 = read(f[2],"MODEL")
 

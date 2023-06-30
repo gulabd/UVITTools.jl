@@ -408,7 +408,7 @@ function fuv_grating1_ea(lam; order = -2)
 
 # Read effective area based on WD0308_crreject data (Updated calibration in 2023)
 
-f = FITS("./caldata/fuv_grating1m2_effarea_9nov22.fits")
+f = FITS("/home/gulabd/work/julia_dev/UVITTools/src/caldata/fuv_grating1m2_effarea_9nov22.fits")
 ea_lamA = read(f[2], "X")
 ea_cm2 = read(f[2],"MODEL")
 
