@@ -12,6 +12,6 @@ makedocs(
                 "Home" => "index.md"
                ])
 deploydocs(;
-    repo="github.com/gulabd/UVITTools.jl",
+    repo="github.com/gulabd/UVITTools.jl.git",
     devbranch = "main"
 )
