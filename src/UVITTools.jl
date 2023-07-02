@@ -116,12 +116,12 @@ export lambdaA2keV, lambdaA2ergs, flux_density_photons2cgs, flux_density_cgs2pho
 	include("fuv_grating1_spectroscopy.jl")
 	include("fuv_grating2_spectroscopy.jl")
 	include("nuv_grating_spectroscopy.jl")
-	include("uvit_lc_from_orbitwise_images.jl")
+
 
 	export xycen_from_ds9reg
 	export write_uvit_grating_phafile
 	export fuv_grating1_count_spec, fuv_grating1_net_countrate_spec, fuv_grating1_pixel2lamA, fuv_grating1_wavelength_calib, fuv_grating1_flux_calib, fuv_grating1_fluxed_spec, fuv_grating1_phafile, fuv_grating1_ea
 	export fuv_grating2_count_spec, fuv_grating2_net_countrate_spec, fuv_grating2_pixel2lamA, fuv_grating2_wavelength_calib, fuv_grating2_flux_calib, fuv_grating2_fluxed_spec, fuv_grating2_phafile, fuv_grating2_ea
-	export nuv_grating_m1_count_spec, nuv_grating_m1_net_countrate_spec, nuv_grating_m1_wavelength_calib, nuv_grating_m1_flux_calib, nuv_grating_m1_fluxed_spec, nuv_grating_phafile, uvit_lc_from_orbitwise_images
+	export nuv_grating_m1_count_spec, nuv_grating_m1_net_countrate_spec, nuv_grating_m1_wavelength_calib, nuv_grating_m1_flux_calib, nuv_grating_m1_fluxed_spec, nuv_grating_phafile
 
 end
