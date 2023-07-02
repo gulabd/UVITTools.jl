@@ -6,7 +6,6 @@ Generate wavelength bins (A_lo, A_hi) and energy bins (E_lo, E_hi) from an array
 ...
 # Arguments
 - `lamA::Array{Float64}`: An array of wavelengths in Å.
-
 ...
 """
 function lamA2lohi(lamA::Array{Float64,1})

@@ -36,8 +36,6 @@ julia> ?UVITTools
 List of tool to analyze data from the AstroSat/UVIT payload.
 
 
-
-
 ## Grating Spectroscopy
 - `xycen_from_ds9reg`
 - `write_uvit_grating_phafile`
@@ -92,42 +90,44 @@ help?> nuv_grating_phafile
 UVITTools can perform photometry of individual sources present in FUV or NUV image in any filter. Users will need to create source and background region file using DS9 and input to the photometry tool. 
 
 ```julia
-julia> uvit_aphot("FUV_Silica_image.fits","src.reg","bgd.reg")
-
-Silica
----------count rates------------
+julia> uvit_aphot("NGC4593_FUV_BaF2___MASTER.fits","src.reg","bgd.reg",satu_corr=true)
+---------count rates, flux and magnitude------------
 Detector: FUV
-Filter: Silica
-source+background rate = 3.856 ± 0.009 counts/s
-background rate = 0.006 ± 0.0 counts/s
-net source count rate = 3.85 ± 0.009 counts/s
-Saturation corrected net source count rate= 4.104 ± 0.01 counts/s
-Saturation corrected f_lambda[Silica]= 4.691e-14 ± 8.7e-16 ergs/cm2/s/A
-Saturation corrected  magnitude[Silica] (AB system) = 14.741 ± 0.02
---------------------------------
-Mean BJD: 2.4580423569922e6
-(2.4580423569922e6, 4.103805249055586, 0.009544112834781853)
-
+Filter: BaF2
+Exposure time: 17129.3 seconds
+source+background rate = 4.2 ± 0.016 counts/s
+background rate = 0.051 ± 0.0 counts/s
+net source count rate = 4.149 ± 0.016 counts/s
+Saturation corrected net source count rate= 4.452 ± 0.016 counts/s
+Saturation corrected f_λ [BaF2]= 1.591e-14 ± 1.6e-16 ergs/cm2/s/A
+Saturation corrected  magnitude[BaF2] (AB system) = 16.15 ± 0.011
+------------------------------------------------------
+Mean BJD: 2.457588076583e6
+------------------------------------------------------
+(2.457588076583e6, 4.451869565968372, 0.016218003910273074)
 ```
 
 ### XSPEC-style PHA spectral file for broadband filters
 
 ```julia
-julia> uvit_filter2pha("NGC7469", "NGC7469_FUV_Silica___MASTER___deFPN_deDIST_deDrift_RGSTRD_IMAGE_x8_deFlat_deExp.fits","src.reg","bgd.reg")
+julia> uvit_filter2pha("ngc4593","NGC4593_FUV_BaF2___MASTER.fits","src.reg","bgd.reg")
 ---------count rates------------
-source+background rate = 3.856+/-0.0092 counts/s
-background rate = 0.006+/-0.0001 counts/s
-net source count rate = 3.85+/-0.0092 counts/s
+Detector: FUV
+Filter: F2
+Exposure time: 17129.3 seconds
+source+background rate = 4.2+/-0.0157 counts/s
+background rate = 0.051+/-0.0004 counts/s
+net source count rate = 4.149+/-0.0157 counts/s
+Saturation corrected net source count rate= 4.452 ± 0.016 counts/s
 --------------------------------
 ---Writing PHA file-----
-Dict{String, Vector{T} where T}("GROUPING" => Int16[1], "COUNTS" => [173984.77067406257], "CHANNEL" => Int32[1], "QUALITY" => Int16[0])
-Dict{String, Vector{T} where T}("GROUPING" => Int16[1], "COUNTS" => [255.16633374757922], "CHANNEL" => Int32[1], "QUALITY" => Int16[0])
-("NGC7469_G08_071T02_9000001_FUV_F5_spec_src.pha", "NGC7469_G08_071T02_9000001_FUV_F5_spec_bgd.pha")
-
+Dict{String, Vector}("GROUPING" => Int16[1], "COUNTS" => [77132.30772409608], "CHANNEL" => Int32[1], "QUALITY" => Int16[0])
+Dict{String, Vector}("GROUPING" => Int16[1], "COUNTS" => [874.8137822323066], "CHANNEL" => Int32[1], "QUALITY" => Int16[0])
+("ngc4593_G05_219T01_9000000_FUV_F2_spec_src.pha", "ngc4593_G05_219T01_9000000_FUV_F2_spec_bgd.pha")
 ```
 ### Grating Spectroscopy - fluxed spectra
 
-  To extract the fluxed spectrum in the -2 order of FUV-Grating1, type 
+  To extract fluxed spectrum in the -2 order of FUV-Grating1, type 
 ```julia
  julia> (lam, flam, err_flam) = fuv_grating1_fluxed_spec("ngc40", "NGC40_FUV_Grating1_IMAGE.fits","src.reg","bgd.reg", order=-2, cross_disp_width_pixels = 40, angle_xaxis_disp_deg=0.0)
 -----------------------------------

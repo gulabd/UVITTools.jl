@@ -85,7 +85,8 @@ function write_uvit_phafile(uvit_detector::String, uvit_filter::String,counts, e
     	rmffile="NONE"
     	arffile="NONE"
     end
-    if respdir=="NONE" || respdir=="none"
+	respdir = joinpath(dirname(dirname(pathof(UVITTools))), "caldata")
+    if rmffile=="NONE" 
     	pha_header["RESPFILE"]=" "
     #	pha_header["ANCRFILE"]=" "
     else

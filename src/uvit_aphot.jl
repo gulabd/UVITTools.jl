@@ -1,7 +1,17 @@
-using FITSIO, Measurements
+# UVIT Photometry Tool
+
+#  15 Feb 2018
+# Gulab Dewangan (gulabd@iucaa.in)
+
+# 1st Update
+#  Instead of Filter name (Silica, etc.), filter number e.g., F3, F4 is now used.
+#  The FILTER keyword in the image file store the filter number. Documentation added.
+
+
+using FITSIO, Measurements, Photometry
 
 """
-    uvit_aphot(imagefile,ds9srcregion, ds9bgdregion[, mst_or_bjd="mst"])
+    uvit_aphot(imagefile,ds9srcregion, ds9bgdregion[, satu_corr=true, mst_or_bjd="mst"])
 
 Perform aperture photometry of a source present in an UVIT FUV/NUV FITS image
  obtained from CCDLAB pipeline.
@@ -11,7 +21,7 @@ This function uses DS9 source and background region files and extracts count rat
 		flux density f_λ and AB magnitude using calibration  information available in 
 		[Tandon et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020AJ....159..158T/abstract).
 
-If the source region is a circle, then the source count rate is also corrected for saturation 
+If the source region is a circle and satu_corr is true, then the source count rate is also corrected for saturation 
 using the function `uvit_saturation_corr.jl` (see below). For details, 
 	[see Tandon et al. (2017)](https://ui.adsabs.harvard.edu/abs/2017AJ....154..128T/abstract).
 
@@ -22,16 +32,19 @@ using the function `uvit_saturation_corr.jl` (see below). For details,
 - `ds9srcregfile::String`: Name of the ds9 region file for the source.
 - `ds9bgdregfile::String`: Name of the ds9 region file for background.
 ## Optional parameters
+- `satu_corr::Bool`: true (default), Apply saturation correction only if source extraction region is circular. 
+   Valid for point sources only and if the redius of the circular extraction region is 
+    about 29 pixels or 12 arcsec (see Tandon et al. 2020).
 - `mst_or_bjd::String`: Mission time or barycentric julian day, default: "mst".
 ...
 """
-function uvit_aphot(imagefile::String,ds9srcregion::String, ds9bgdregion::String; mst_or_bjd::String="bjd")
+function uvit_aphot(imagefile::String,ds9srcregion::String, ds9bgdregion::String; satu_corr::Bool=true, mst_or_bjd::String="bjd")
 	im_id = FITS(imagefile)
 #	im_data = transpose(read(im_id[1]))
 	im_data = read(im_id[1])
 	im_header = read_header(im_id[1])
 	uvit_filter = im_header["FILTERID"]
-	println(uvit_filter)
+#	println(uvit_filter)
 	detector = im_header["DETECTOR"]
 	channel = detector
 	frampers = im_header["FRAMPERS"]
@@ -45,18 +58,21 @@ function uvit_aphot(imagefile::String,ds9srcregion::String, ds9bgdregion::String
 		xcen = srcreg[2]
 		ycen = srcreg[3]
 		radius = srcreg[4]
-			(src_counts, err_src_counts) = 	sum_circle(im_data,xcen,ycen, radius)
+		aper = CircularAperture(xcen, ycen, radius)
+#		src_counts = photometry(aper, im_data)
+#		err_src_counts = sqrt(src_counts)
+	#		(src_counts, err_src_counts) = 	sum_circle(im_data,xcen,ycen, radius)
 	# Apply saturation correction
-			src_counts_satu_corr = uvit_saturation_corr(src_counts/exposure_time_sec, frames_per_sec=frampers) * exposure_time_sec
-			
+	#		src_counts_satu_corr = uvit_saturation_corr(src_counts/exposure_time_sec, frames_per_sec=frampers) * exposure_time_sec		
 	#    println(src_counts)
 	    src_area = pi * radius^2
 	elseif srcreg[1]=="annulus"
 		xcen = srcreg[2]
 		ycen = srcreg[3]
-		inner_radius = srcreg[4]
-		outer_radius = srcreg[5]
-		(src_counts, err_src_counts) = 	sum_circann(im_data,xcen,ycen, inner_radius, outer_radius)
+		r_in = srcreg[4]
+		r_out = srcreg[5]
+		aper = CircularAnnulus(xcen, ycen, r_in, r_out)
+	#	(src_counts, err_src_counts) = 	sum_circann(im_data,xcen,ycen, inner_radius, outer_radius)
 		src_area = pi * (outer_radius^2 - inner_radius^2)
 	elseif srcreg[1]=="ellipse"
 		xcen = srcreg[2]
@@ -64,12 +80,15 @@ function uvit_aphot(imagefile::String,ds9srcregion::String, ds9bgdregion::String
 		major_radius = srcreg[4]
 		minor_radius = srcreg[5]
 		theta = srcreg[6]
-		#= 
+		aper =  EllipticalAperture(xcen, ycen, major_radius, minor_radius, theta)
+		#=  OLDDER code
 		AperPhotometry requires theta measured w.r.t. to +X-axis in radians 
 		and in the range of -pi/2 <= theta <= pi/2
 
 		The angle in the ds9 ellipse region is measured from the positive axis.
 		=#
+
+		#=  Older code that utlised AperPhotometry
 		if theta <= 90.0
 			theta_rad = theta * π/180.0
 		elseif theta > 90.0 && theta <= 180.0
@@ -80,25 +99,41 @@ function uvit_aphot(imagefile::String,ds9srcregion::String, ds9bgdregion::String
 			theta_rad = -(360.0 - theta) * π/180.0
 		end
 		println([xcen,ycen,major_radius,minor_radius,theta_rad])
-		(src_counts, err_src_counts) = sum_ellipse(im_data,xcen,ycen,major_radius,minor_radius,theta_rad)
+		=#
+	#	(src_counts, err_src_counts) = sum_ellipse(im_data,xcen,ycen,major_radius,minor_radius,theta_rad)
 		src_area = pi * major_radius * minor_radius
 	else
 		println("Source region not recognized")
 		return 0
 	end
 
+	# Perform Aperture Photometry
+	src_counts = photometry(aper, im_data).aperture_sum
+	err_src_counts = sqrt(src_counts)
+
+	#if satu_corr == true
+		# Saturation correction should be applied only for point sources, and use circular region of 12arcsec radius or about 29 pixels.
+	# Apply saturation correction
+		src_counts_satu_corr = uvit_saturation_corr(src_counts/exposure_time_sec, frames_per_sec=frampers) * exposure_time_sec
+	#	err_src_counts_satu_corr = 	err_src_counts * (src_counts_satu_corr / src_counts)
+	#else
+	#	println("Saturation correction not applied")
+	#end
+
 	if bgdreg[1]=="circle"
 		xcen_b = bgdreg[2]
 		ycen_b = bgdreg[3]
 		radius_b = bgdreg[4]
-	    (bgd_counts, err_bgd_counts) = 	sum_circle(im_data,xcen_b,ycen_b, radius_b)
+		aper_b = CircularAperture(xcen_b, ycen_b, radius_b)
+	#    (bgd_counts, err_bgd_counts) = 	sum_circle(im_data,xcen_b,ycen_b, radius_b)
 	    bgd_area = pi * radius_b^2
 	elseif bgdreg[1]=="annulus"
 		xcen_b = bgdreg[2]
 		ycen_b = bgdreg[3]
 		inner_radius_b = bgdreg[4]
 		outer_radius_b = bgdreg[5]
-		(bgd_counts, err_bgd_counts) = 	sum_circann(im_data,xcen_b,ycen_b, inner_radius_b,outer_radius_b)
+		aper_b = CircularAnnulus(xcen_b, ycen_b, inner_radius_b, outer_radius_b)
+	#	(bgd_counts, err_bgd_counts) = 	sum_circann(im_data,xcen_b,ycen_b, inner_radius_b,outer_radius_b)
 		bgd_area = pi * (outer_radius_b^2  - inner_radius_b^2)
 	elseif bgdreg[1]=="ellipse"
 		xcen_b = bgdreg[2]
@@ -106,8 +141,9 @@ function uvit_aphot(imagefile::String,ds9srcregion::String, ds9bgdregion::String
 		major_radius_b = bgdreg[4]
 		minor_radius_b = bgdreg[5]
 		theta_b = bgdreg[6]
+		aper_b =  EllipticalAperture(xcen_b, ycen_b, major_radius_b, minor_radius_b, theta_b)
 	#ds9 ellipse region theta in degrees to Julia region angle in radians.
-		if theta_b <= 90.0
+	#=	if theta_b <= 90.0
 			theta_b_rad = theta_b * π/180.0
 		elseif theta_b > 90.0 && theta_b <= 180.0
 			theta_b_rad = -(180.0-theta_b) * π/180.0
@@ -116,14 +152,19 @@ function uvit_aphot(imagefile::String,ds9srcregion::String, ds9bgdregion::String
 		else theta_b > 270.0
 			theta_b_rad = -(360.0 - theta_b) * π/180.0
 		end
-
-		(bgd_counts, err_bgd_counts) = sum_ellipse(im_data,xcen_b,ycen_b,major_radius_b,minor_radius_b,theta_b_rad)
+	=#
+	#	(bgd_counts, err_bgd_counts) = sum_ellipse(im_data,xcen_b,ycen_b,major_radius_b,minor_radius_b,theta_b_rad)
 		bgd_area = pi * major_radius_b * minor_radius_b
 	else
 		print("Background region not recognized")
 		return 0
 	end
+
+	bgd_counts = photometry(aper_b, im_data).aperture_sum
+	# err_bgd_counts = sqrt(bgd_counts)
+
     scl_bgd_counts = bgd_counts * (src_area / bgd_area)
+
 
 	
 
@@ -133,7 +174,8 @@ function uvit_aphot(imagefile::String,ds9srcregion::String, ds9bgdregion::String
 	bgd_count_rate = measurement(scl_bgd_counts/exposure_time_sec, sqrt(bgd_counts) * (src_area / bgd_area) / exposure_time_sec)
 	#err_bgd_count_rate = sqrt(bgd_counts) * (src_area / bgd_area) / exposure_time_sec
 	net_count_rate = measurement((src_counts - scl_bgd_counts)/exposure_time_sec, sqrt((Measurements.uncertainty(src_count_rate))^2 + (Measurements.uncertainty(bgd_count_rate))^2))
-	if srcreg[1]=="circle"
+	if srcreg[1]=="circle" && satu_corr == true
+		src_counts_satu_corr = uvit_saturation_corr(src_counts/exposure_time_sec, frames_per_sec=frampers) * exposure_time_sec
 		src_count_rate_satu_corr = measurement(src_counts_satu_corr/exposure_time_sec, sqrt(src_counts_satu_corr)/exposure_time_sec)
 		net_count_rate_satu_corr = measurement((src_counts_satu_corr - scl_bgd_counts)/exposure_time_sec, sqrt((Measurements.uncertainty(src_count_rate_satu_corr))^2 + (Measurements.uncertainty(bgd_count_rate))^2))
 	end
@@ -217,29 +259,40 @@ the following line of code based on 2017 calibration are not required.
 	UC = uvit_zp_uc(detector, uvit_filter)[4]
 	ZP= uvit_zp_uc(detector, uvit_filter)[5]
 
-     f_lambda = net_count_rate_satu_corr * UC
-     magnitude = -2.5log10(net_count_rate_satu_corr) + ZP
+	if satu_corr == true  && srcreg[1] == "circle"
+     	f_lambda = net_count_rate_satu_corr * UC
+     	magnitude = -2.5log10(net_count_rate_satu_corr) + ZP
+	else
+		f_lambda = net_count_rate * UC
+     	magnitude = -2.5log10(net_count_rate) + ZP
+	end
 
 
 	
 		#Correct count rate for saturation using uvit_saturation_corr.
 
-	println("---------count rates------------")
+	println("---------count rates, flux and magnitude------------")
 	println("Detector: ",detector)
 	println("Filter: ", uvit_filter)
+	println("Exposure time: ", round(exposure_time_sec; digits=1), " seconds")
 #	println("Mean MST: ", time_meanmst)
 	println("source+background rate = ", round(src_count_rate,digits=3)," counts/s")
 	println("background rate = ", round(bgd_count_rate,digits=3),  " counts/s")
-	println("net source count rate = ", round(net_count_rate,digits=3), " counts/s")
-	if srcreg[1]=="circle"
+	
+	if srcreg[1]=="circle" && satu_corr == true
+		println("net source count rate = ", round(net_count_rate,digits=3), " counts/s")
 		println("Saturation corrected net source count rate= ",round(net_count_rate_satu_corr,digits=3), " counts/s")
+		println("Saturation corrected f_λ [$uvit_filter]= ", f_lambda," ergs/cm2/s/A")
+		println("Saturation corrected  magnitude[$uvit_filter] (AB system) = ", round(magnitude,digits=3))
+	else
+		println("----No saturation correction-----")
+		println("net source count rate = ", round(net_count_rate,digits=3), " counts/s")
+	#	println("Net source count rate= ",round(net_count_rate_satu_corr,digits=3), " counts/s")
+		println("Flux density, f_λ [$uvit_filter]= ", f_lambda," ergs/cm2/s/A")
+		println("Magnitude[$uvit_filter] (AB system) = ", round(magnitude,digits=3))
 	end
-		println("Saturation corrected f_lambda[$uvit_filter]= ", f_lambda," ergs/cm2/s/A")
-	println("Saturation corrected  magnitude[$uvit_filter] (AB system) = ", round(magnitude,digits=3))
-	println("--------------------------------")
-#	println("---Writing PHA file-----")
-#	write_uvit_phafile(detector,filter,src_counts,exposure_time_sec;phafile=srcphafile,respdir=respdir)
- #	write_uvit_phafile(detector,filter,bgd_counts,exposure_time_sec;phafile=bgdphafile,respdir="NONE")
+	println("------------------------------------------------------")
+
  if mst_or_bjd=="mst"
 	println("Mean MST: ", time_meanmst)
 	if srcreg[1]=="circle"
@@ -249,14 +302,15 @@ the following line of code based on 2017 calibration are not required.
 	end
  elseif mst_or_bjd=="bjd"
 	println("Mean BJD: ", time_meanbjd)
-	if srcreg[1]=="circle"
+	println("------------------------------------------------------")
+	if srcreg[1]=="circle" && satu_corr==true
 		return  time_meanbjd, Measurements.value(net_count_rate_satu_corr), Measurements.uncertainty(net_count_rate_satu_corr)
 	else
 		return  time_meanbjd, Measurements.value(net_count_rate), Measurements.uncertainty(net_count_rate)
 	end
  else
 	println("Requested time col not available, returnin time in bjd")
-	if srcreg[1]=="circle"
+	if srcreg[1]=="circle" && satu_corr == true
 		return  time_meanbjd, Measurements.value(net_count_rate_satu_corr), Measurements.uncertainty(net_count_rate_satu_corr)
 	else
 		return  time_meanbjd, Measurements.value(net_count_rate), Measurements.uncertainty(net_count_rate)

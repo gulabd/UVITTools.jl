@@ -6,7 +6,7 @@ using FITSIO, FITSIO.Libcfitsio, Dierckx, Measurements, DelimitedFiles,  DataFra
 
 
 """
-   `nuv_grating_m1_count_spec(nuv_grating_image_file, ds9regfile[, cross_disp_width_pixels = 50, rate = true, outfile="nuv_grating_m1_count_spec.dat"])` 
+   `nuv_grating_m1_count_spec(nuv_grating_image_file, ds9regfile[, cross_disp_width_pixels = 40, rate = true, outfile="nuv_grating_m1_count_spec.dat"])` 
 
 Extract count rate spectrum from AstroSat/UVIT NUV-Grating dispersed image generated from CCDLAB processing pipeline.
 
@@ -18,13 +18,13 @@ Extract count rate spectrum from AstroSat/UVIT NUV-Grating dispersed image gener
 ## Optional parameters
 - `order::Int`: -2 (default), Grating order to be used to extract the spectrum. 
                  Allowed orders=-1 and -2.
-- `cross_disp_width_pixels::String`: 50 (default), width in pixels in the cross-dispersion direction.
+- `cross_disp_width_pixels::String`: 40 (default), width in pixels in the cross-dispersion direction.
 - `rate::Bool`: true (default) for count rate spectrum, otherwise false for count spectrum.
 - `outfile::String`: Name of ascii output file name. Default file name: "`nuv_grating_m1_count_spec.dat`".
 
 ...
 """
-function nuv_grating_m1_count_spec(nuv_grating_image_file::String, ds9regfile::String; cross_disp_width_pixels::Int = 50, rate::Bool = false, outfile::String = "nuv_grating_m1_count_spec.dat")
+function nuv_grating_m1_count_spec(nuv_grating_image_file::String, ds9regfile::String; cross_disp_width_pixels::Int = 40, rate::Bool = false, outfile::String = "nuv_grating_m1_count_spec.dat")
 
 	# Read grating image file
    	fb = FITS(nuv_grating_image_file)
@@ -92,7 +92,7 @@ end
 
 """
 
-   `nuv_grating_m1_net_countrate_spec(nuv_grating_image_file, ds9srcregfile, ds9bgdregfile[, cross_disp_width_pixels = 50,  outfile="nuv_grating_m1_net_countrate_spec.dat"])` 
+   `nuv_grating_m1_net_countrate_spec(nuv_grating_image_file, ds9srcregfile, ds9bgdregfile[, cross_disp_width_pixels = 40,  outfile="nuv_grating_m1_net_countrate_spec.dat"])` 
 
 Extract background corrected, net count rate spectrum from AstroSat/UVIT NUV-Grating dispersed image generated from CCDLAB processing pipeline.
 
@@ -103,7 +103,7 @@ Extract background corrected, net count rate spectrum from AstroSat/UVIT NUV-Gra
 - `ds9srcregfile::String`: Name of the ds9 region file with source center as the zero order position.
 - `ds9bgdregfile::String`: Name of the ds9 region file with  center in a source-free region of the image.
 ## Optional parameters
-- `cross_disp_width_pixels::String`: 50 (default), width in pixels in the cross-dispersion direction.
+- `cross_disp_width_pixels::String`: 40 (default), width in pixels in the cross-dispersion direction.
 - `outfile::String`: Name of ascii output file name. Default file name: "`nuv_grating_m1_net_countrate_spec.dat`".
 ...
 """
@@ -117,7 +117,7 @@ end
 
 
 
-function nuv_grating_m1_extr_count_spec(nuv_grating_image_file::String, ds9srcregfile::String, ds9bgdregfile::String, cross_disp_width_pixels::Int = 50)
+function nuv_grating_m1_extr_count_spec(nuv_grating_image_file::String, ds9srcregfile::String, ds9bgdregfile::String, cross_disp_width_pixels::Int = 40)
 
   #  Use rbinned and rotated nuv grating image
 
@@ -367,7 +367,7 @@ end
 
 
 """
-    nuv_grating_m1_fluxed_spec(target,nuv_grating_image_file, ds9srcregfile, ds9bgdregfile[,order=-1, cross_disp_width_pixels= 50, outfile="default"])
+    nuv_grating_m1_fluxed_spec(target,nuv_grating_image_file, ds9srcregfile, ds9bgdregfile[,order=-1, cross_disp_width_pixels= 40, outfile="default"])
 
 Extract flux calibrated spectrum from AstroSat/UVIT NUV-Grating order=-1 dispersed image generated from CCDLAB processing pipeline.
 
@@ -383,14 +383,14 @@ This is a main function that uses other functions for extraction of source and b
 - `ds9bgdregfile::String`: Name of the ds9 region file with  center in a source-free region of the image.
 ## Optional parameters
 - `order::Int`: -1 (default), Grating order to be used to extract the spectrum. Allowed orders=-1. Order=-2 is not yet calibrated.
-- `cross_disp_width_pixels::String`: 50 (default), width in pixels in the cross-dispersion direction.
+- `cross_disp_width_pixels::String`: 40 (default), width in pixels in the cross-dispersion direction.
 -`outfile::String`:Name of the output file. A default file name based on the target name/grating will be generated if outfile="default".
 ## Output
 - `(λ, f_λ, err_f_λ)`
 - Fluxed spectrum saved in an ascii file.
 ...
 """
-function nuv_grating_m1_fluxed_spec(target::String,nuv_grating_image_file::String, ds9srcregfile::String, ds9bgdregfile::String; order::Number=-1, cross_disp_width_pixels::Int = 50, outfile::String="default")
+function nuv_grating_m1_fluxed_spec(target::String,nuv_grating_image_file::String, ds9srcregfile::String, ds9bgdregfile::String; order::Number=-1, cross_disp_width_pixels::Int = 40, outfile::String="default")
     (pixels_m1_order, netsrc_spec_m1_order_counts_per_s) = nuv_grating_m1_net_countrate_spec(nuv_grating_image_file, ds9srcregfile, ds9bgdregfile, cross_disp_width_pixels = cross_disp_width_pixels)
    	(nuv_lambdaA, netsrc_spec_m1_order_counts_per_s_A) = nuv_grating_m1_wavelength_calib(pixels_m1_order, netsrc_spec_m1_order_counts_per_s)
    	(nuv_lambdaA, f_lambda_with_error) = nuv_grating_m1_flux_calib(nuv_lambdaA, netsrc_spec_m1_order_counts_per_s_A)
@@ -440,7 +440,7 @@ end
 
 
 """
-    nuv_grating_phafile(target,nuv_grating1_image_file, ds9srcregfile, ds9bgdregfile[, cross_disp_width_pixels= 50])
+    nuv_grating_phafile(target,nuv_grating1_image_file, ds9srcregfile, ds9bgdregfile[, cross_disp_width_pixels= 40])
 
 Extract XSPEC/Sherpa compatible source and background PHA spectral files from AstroSat/UVIT NUV-Grating  dispersed image generated from CCDLAB processing pipeline.
 
@@ -456,7 +456,7 @@ and spectral responses, see [Dewangan (2021)](https://ui.adsabs.harvard.edu/abs/
 - `ds9srcregfile::String`: Name of the ds9 region file with source center as the zero order position.
 - `ds9bgdregfile::String`: Name of the ds9 region file with  center in a source-free region of the image.
 ## Optional parameters
-- `cross_disp_width_pixels::String`: 50 (default), width in pixels in the cross-dispersion direction.
+- `cross_disp_width_pixels::String`: 40 (default), width in pixels in the cross-dispersion direction.
 - `respdir::String`: Name of the directory containing the response matrices in the local machine. The response files can be downloaded from the GitHub page.
 #read necessary keywords`
 ## Output
@@ -464,7 +464,7 @@ and spectral responses, see [Dewangan (2021)](https://ui.adsabs.harvard.edu/abs/
 - Some relevant information are also printed on the screen.
 ...
 """
-function nuv_grating_phafile(target::String,nuv_grating_image_file::String, ds9srcregfile::String, ds9bgdregfile::String; cross_disp_width_pixels = 50, respdir::String = "/soft/astrosat/responses/uvit/")
+function nuv_grating_phafile(target::String,nuv_grating_image_file::String, ds9srcregfile::String, ds9bgdregfile::String; cross_disp_width_pixels = 40, respdir::String = "/soft/astrosat/responses/uvit/")
 	#read necessary keywords
    	fb = FITS(nuv_grating_image_file)
    	exposure_time_sec = float(read_key(fb[1], "RDCDTIME")[1])
@@ -498,7 +498,7 @@ function nuv_grating_phafile(target::String,nuv_grating_image_file::String, ds9s
 
 	# Update Respfile in source spectrum
 	# rmffile=respdir * "nuv_grating_m1_9oct19.rmf"
-  
+    respdir = joinpath(dirname(pathof(UVITTools)), "caldata")
 	rmffile= respdir * "nuv_grating_m1_9oct19.rmf"
 	println("Using respfile $rmffile")
 

@@ -2,7 +2,7 @@
 using UVITTools
 using Documenter
 
-push!(LOAD_PATH,"../src")
+#push!(LOAD_PATH,"../src")
 # println(LOAD_PATH)
 
 makedocs(
