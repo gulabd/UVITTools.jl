@@ -97,11 +97,11 @@ function fuv_grating1_count_spec(fuv_grating1_image_file::String, ds9regfile::St
         if rate == true
 		#display(plot(pixels_m2_order, Measurements.value.(grating_spec_m2_order_counts_per_s), yerr=Measurements.uncertainty.(grating_spec_m2_order_counts_per_s),xlabel="Pixel numbers wrt zero order", ylabel="counts/s"))
           		writedlm(outspecfile, zip(pixels_m2_order, Measurements.value.(grating_spec_m2_order_counts_per_s), Measurements.uncertainty.(grating_spec_m2_order_counts_per_s)))
-          		return pixels_m2_order, Measurements.value.(grating_spec_m2_order_counts_per_s), Measurements.uncertainty.(grating_spec_m2_order_counts_per_s)
+          		return pixels_m2_order, grating_spec_m2_order_counts_per_s
        	else
 		#display(plot(pixels_m2_order, Measurements.value.(grating_spec_m2_order_counts), yerr=Measurements.uncertainty.(grating_spec_m2_order_counts), xlabel="Pixel numbers wrt zero order", ylabel="counts"))
           		writedlm(outspecfile, zip(pixels_m2_order, Measurements.value.(grating_spec_m2_order_counts), Measurements.uncertainty.(grating_spec_m2_order_counts)))
-          		return pixels_m2_order, Measurements.value.(grating_spec_m2_order_counts), Measurements.uncertainty.(grating_spec_m2_order_counts)
+          		return pixels_m2_order, grating_spec_m2_order_counts
        	end
 		
 		

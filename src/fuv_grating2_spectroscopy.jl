@@ -168,11 +168,11 @@ elseif order==-1
 	if rate == true
 		#display(plot(pixels_m2_order, Measurements.value.(grating_spec_counts_per_s), yerr=Measurements.uncertainty.(grating_spec_counts_per_s),xlabel="Pixel numbers wrt zero order", ylabel="counts/s"))
 		writedlm(outspecfile,zip(pixels, Measurements.value.(grating_spec_counts_per_s), Measurements.uncertainty.(grating_spec_counts_per_s)))
-		return pixels, Measurements.value.(grating_spec_counts_per_s), Measurements.uncertainty.(grating_spec_counts_per_s)
+		return pixels, grating_spec_counts_per_s
 	else
 		#display(plot(pixels_m2_order, Measurements.value.(grating_spec_counts), yerr=Measurements.uncertainty.(grating_spec),xlabel="Pixel numbers wrt zero order", ylabel="counts"))
 		writedlm(outfile,zip(pixels, Measurements.value.(grating_spec_counts), Measurements.uncertainty.(grating_spec_counts)))
-		return pixels, Measurements.value.(grating_spec_counts), Measurements.uncertainty.(grating_spec_counts)
+		return pixels, grating_spec_counts
 	end
 else
 	println("Grating order $order not calibrated")
