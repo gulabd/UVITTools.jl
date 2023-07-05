@@ -50,11 +50,7 @@ help?> nuv_grating_phafile
 ```
 """
 module UVITTools
-
-using DelimitedFiles, Photometry
-export DelimitedFiles, readdlm, writedlm
-using Measurements
-using DataFrames
+using FITSIO, DataFrames, Dierckx, Measurements,  DelimitedFiles, SmoothingSplines, Dates, Photometry
 
 # General purpose tools
 
