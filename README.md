@@ -12,16 +12,8 @@ A tool to analyze data from the [AstroSat](http://astrosat-ssc.iucaa.in/)/[UVIT]
 ```julia
 julia> using Pkg
 
-julia> Pkg.add("UVITTools")
+julia> Pkg.add(url="https://github.com/gulabd/UVITTools.jl")
 ```
-or
-```julia
-julia>]
-
-(@v1.6) pkg> add UVITTools
-```
-
-
 
 ## Usage
 UVITTools can perform photometery, spectroscopy of astronomical sources from UVIT FUV/NUV images acquired with the AstroSat/UVIT payload.  The package is meant for images generated with the [CCDLAB package](https://iopscience.iop.org/article/10.1088/1538-3873/aa8800). The tools are not compatible with the data generated from the  [UVIT level2 pipeline software](http://astrosat-ssc.iucaa.in/uvitData).
