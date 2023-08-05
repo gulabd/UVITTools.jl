@@ -1,6 +1,6 @@
 # UVITTools
 
-A tool to analyze data from the [AstroSat](http://astrosat-ssc.iucaa.in/)/[UVIT](https://uvit.iiap.res.in/) payload.
+A package for AstroSat/UVIT grating spectroscopy and aperture photometry. 
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://gulabd.github.io/UVITTools.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://gulabd.github.io/UVITTools.jl/dev)
@@ -24,7 +24,8 @@ julia>]
 
 
 ## Usage
-UVITTools can perform photometery, spectroscopy of astronomical sources from UVIT FUV/NUV images acquired with the AstroSat/UVIT payload.  The package is meant for images generated with the [CCDLAB package](https://iopscience.iop.org/article/10.1088/1538-3873/aa8800). The tools are not compatible with the data generated from the  [UVIT level2 pipeline software](http://astrosat-ssc.iucaa.in/uvitData).
+`UVITTools` allows FUV/NUV grating spectroscopy and aperture photometry of astronomical sources observed with the [Ultra-Violet Imaging Telescope (UVIT)](https://uvit.iiap.res.in/) on-board the Indian space observatory [*AstroSat*](https://www.isro.gov.in/AstroSat.html).  The package is compatible with the processed data generated  with the [CCDLAB pipeline](https://iopscience.iop.org/article/10.1088/1538-3873/aa8800). 
+
 ```julia
 julia> using UVITTools
 ```
@@ -166,3 +167,5 @@ Using /soft/astrosat/responses/uvit/fuv_grating1_m2_4oct19.rmf
 ("ngc40_C02_010T01_9000000_FUV_Grating1_m2_spec_src.pha", "ngc40_C02_010T01_9000000_FUV_Grating1_m2_spec_bgd.pha")
 ```
 
+## License
+The `UVITTools.jl` package is licensed under the MIT License. The original author is Gulab Chand Dewangan (IUCAA, Pune).

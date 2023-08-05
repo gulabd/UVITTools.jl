@@ -28,9 +28,9 @@ where the coefficients $c_0$ and $c_1$ are derived from wavelength calibration b
 
 ### Flux calibration
 
-The count rates at each wavelength are converted to flux using the effective area derived from the grating observations of spectrophotometric standards. The effective area files for three grating and calibrated orders are provided in the `caldata` directory, these files are used by the flux calibration functions `fuv_grating1_flux_calib`, `fuv_grating2_flux_calib` and `nuv_grating1_m1_flux_calib` (see the function documentation for more details). 
+The count rates at each wavelength are converted to flux using the effective area derived from the grating observations of spectrophotometric standards. The effective area files for three grating and calibrated orders are provided in the `caldata` directory, these files are used by the flux calibration functions `fuv_grating1_flux_calib`, `fuv_grating2_flux_calib` and `nuv_grating1_m1_flux_calib` (see the function documentation for more details). These functions assume that the extraction width along the spatial direction include all the source flux as the aperture correction is not built-in.
 
-### Generating wavelengh and flux calibrated spectra in one step
+### Generating wavelength and flux calibrated spectra in one step
 
 The `UVITTools.jl` package provides functions for direct generation of background-corrected, wavelength and flux calibrated spectra in one shot without going through the individual steps. Users can use the functions `fuv_grating1_fluxed_spec`, `fuv_grating2_fluxed_spec`, and `nuv_grating_m1_fluxed_spec` for this purpose (see function documentation for more details).
 
@@ -44,7 +44,7 @@ The `UVITTools.jl` package includes updated response files generated using the m
 
 ## UVIT Aperture Photometry
 
-The UVIT is primarily a high resolution imaging instrument in a number of broadband filters (see <https://uvit.iiap.res.in/Instrument/Filters>). The photometric calibration of all the broadband filters are performed in Tandon et al. ([2017](https://iopscience.iop.org/article/10.3847/1538-3881/aa8451), [2020](https://iopscience.iop.org/article/10.3847/1538-3881/ab72a3)). The `UVITTools.jl` provides  functions for aperture photometry (see `uvit_aphot`) using simple apertures such as circular, elliptical, annular regions. The aperture photometry tasks output count rate, flux and magnitude based on the photometric calibration.
+The UVIT is primarily a high resolution imaging instrument in a number of broadband filters (see <https://uvit.iiap.res.in/Instrument/Filters>). The photometric calibration of all the broadband filters are performed in Tandon et al. ([2017](https://iopscience.iop.org/article/10.3847/1538-3881/aa8451), [2020](https://iopscience.iop.org/article/10.3847/1538-3881/ab72a3)). The `UVITTools.jl` provides  functions for aperture photometry (see `uvit_aphot`) using simple apertures such as circular, elliptical, annular regions. The aperture photometry task output count rate, flux and magnitude based on the photometric calibration. Currently, `uvit_aphot` does not account for aperture correction, hence users will need to use large enough extraction region (a circular region with radius at least 25 pixels)  to include almost all counts from point sources.
 
 ### Saturation correction
 
