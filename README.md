@@ -2,7 +2,7 @@
 
 A package for AstroSat/UVIT grating spectroscopy and aperture photometry. 
 
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://gulabd.github.io/UVITTools.jl/stable)
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://gulabd.github.io/UVITTools.jl/dev)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://gulabd.github.io/UVITTools.jl/dev)
 [![Build Status](https://github.com/gulabd/UVITTools.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/gulabd/UVITTools.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/gulabd/UVITTools.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/gulabd/UVITTools.jl)
@@ -24,7 +24,7 @@ julia>]
 
 
 ## Usage
-`UVITTools` allows FUV/NUV grating spectroscopy and aperture photometry of astronomical sources observed with the [Ultra-Violet Imaging Telescope (UVIT)](https://uvit.iiap.res.in/) on-board the Indian space observatory [*AstroSat*](https://www.isro.gov.in/AstroSat.html).  The package is compatible with the processed data generated  with the [CCDLAB pipeline](https://iopscience.iop.org/article/10.1088/1538-3873/aa8800). 
+`UVITTools` allows FUV/NUV grating spectroscopy and aperture photometry of astronomical sources observed with the [Ultra-Violet Imaging Telescope (UVIT)](https://uvit.iiap.res.in/) on-board the Indian space observatory [*AstroSat*](https://www.isro.gov.in/AstroSat.html).  The package is compatible with the processed data generated  with the [CCDLAB pipeline](https://iopscience.iop.org/article/10.1088/1538-3873/aa8800). Check the [latest documentation here](https://gulabd.github.io/UVITTools.jl/dev/).
 
 ```julia
 julia> using UVITTools
