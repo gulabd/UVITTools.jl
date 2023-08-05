@@ -1,10 +1,22 @@
 # UVITTools.jl
 *Tools for AstroSat/UVIT grating spectroscopy and photometry.*
 ## Package Features
-- Extract flux calbrated UVIT FUV/NUV grating spectra, 
-- generate source and background PHA spectral data compatible with XSPEC/Sherpa
-- Perform aperture photometry of sources in the UVIT images in any of the broadband filters
-- Saturation for point sources
+- Extract flux calbrated UVIT FUV/NUV grating spectra.
+- generate source and background PHA spectral data compatible with XSPEC/Sherpa.
+- Perform aperture photometry of FUV/NUV sources in any of the broadband filters.
+- Saturation correction for point sources.
+
+## UVIT Grating Spectoscopy
+### Extraction of 1d count spectra
+### Wavelength Calibration
+### Flux calibration
+### XSPEC/Sherpa-compatible PHA spectral data
+### Redistribution matrix and ancillary response files
+
+## UVIT Aperture Photometry
+### Count rate, flux and magnitudes
+### Saturation correction
+### XSPEC/Sherpa compatible single channel spectral data and responses
 
 ## Function Documentation
 #### FUV-Grating1

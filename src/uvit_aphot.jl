@@ -8,7 +8,7 @@
 #  The FILTER keyword in the image file store the filter number. Documentation added.
 
 
-using FITSIO, Measurements, Photometry
+#using FITSIO, Measurements, Photometry
 
 """
     uvit_aphot(imagefile,ds9srcregion, ds9bgdregion[, satu_corr=true, mst_or_bjd="mst"])

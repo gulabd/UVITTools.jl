@@ -1,5 +1,5 @@
 
-using FITSIO, Dierckx, Measurements,  DelimitedFiles, SmoothingSplines, Dates
+#using FITSIO, Dierckx, Measurements,  DelimitedFiles, SmoothingSplines, Dates
 
 """
    `fuv_grating1_count_spec(fuv_grating1_image_file, ds9regfile[, order = -1, angle_xaxis_disp_deg=0.0, cross_disp_width_pixels = 40, rate = true])` 

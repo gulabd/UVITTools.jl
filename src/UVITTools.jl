@@ -50,7 +50,14 @@ help?> nuv_grating_phafile
 ```
 """
 module UVITTools
-using FITSIO, DataFrames, Dierckx, Measurements,  DelimitedFiles, SmoothingSplines, Dates, Photometry
+using FITSIO
+using DataFrames
+using  Dierckx
+using Measurements
+using DelimitedFiles
+using SmoothingSplines
+using Dates 
+using Photometry
 
 # General purpose tools
 

@@ -7,7 +7,7 @@
 #				Included new response files based on Tandon et al. 2020 calibration
 #       Earlier rmf/arf files replaced with .rsp file that includes both rmf/arf
 
-using FITSIO
+#using FITSIO
 
 function write_uvit_phafile(uvit_detector::String, uvit_filter::String,counts, exptime_sec::Float64; phafile::String="phafile.pha",respdir::String="/soft/astrosat/responses/uvit/")
 

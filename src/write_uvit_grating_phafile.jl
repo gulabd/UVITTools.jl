@@ -1,5 +1,5 @@
 
-using FITSIO
+#using FITSIO
 """
    `write_uvit_grating_phafile(uvit_detector, uvit_grating, channels, counts, exptime_sec[, phafile="phafile.pha"])`
 

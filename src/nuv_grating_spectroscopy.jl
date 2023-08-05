@@ -2,7 +2,7 @@
 
 
 # For Julia 1.0 
-using FITSIO, FITSIO.Libcfitsio, Dierckx, Measurements, DelimitedFiles,  DataFrames
+#using FITSIO, FITSIO.Libcfitsio, Dierckx, Measurements, DelimitedFiles,  DataFrames
 
 
 """

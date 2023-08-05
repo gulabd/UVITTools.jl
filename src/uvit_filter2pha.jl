@@ -9,7 +9,7 @@
 
 # ------------------------------------------------------------------
 
-using FITSIO, FITSIO.Libcfitsio
+# using FITSIO, FITSIO.Libcfitsio
 
 """
     uvit_filter2pha(target,imagefile, ds9srcregfile, ds9bgdregfile[,satu_corr=true, respdir=""/soft/astrosat/resp/uvit/"])
