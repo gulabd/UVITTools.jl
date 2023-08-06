@@ -464,7 +464,7 @@ and spectral responses, see [Dewangan (2021)](https://ui.adsabs.harvard.edu/abs/
 - Some relevant information are also printed on the screen.
 ...
 """
-function nuv_grating_phafile(target::String,nuv_grating_image_file::String, ds9srcregfile::String, ds9bgdregfile::String; cross_disp_width_pixels = 40, respdir::String = "/soft/astrosat/responses/uvit/")
+function nuv_grating_phafile(target::String,nuv_grating_image_file::String, ds9srcregfile::String, ds9bgdregfile::String; cross_disp_width_pixels = 40)
 	#read necessary keywords
    	fb = FITS(nuv_grating_image_file)
    	exposure_time_sec = float(read_key(fb[1], "RDCDTIME")[1])
@@ -499,7 +499,7 @@ function nuv_grating_phafile(target::String,nuv_grating_image_file::String, ds9s
 	# Update Respfile in source spectrum
 	# rmffile=respdir * "nuv_grating_m1_9oct19.rmf"
     respdir = joinpath(dirname(pathof(UVITTools)), "caldata")
-	rmffile= respdir * "nuv_grating_m1_9oct19.rmf"
+	rmffile= joinpath(respdir, "nuv_grating_m1_9oct19.rmf")
 	println("Using respfile $rmffile")
 
 	f=fits_open_file(srcphafile, +1)

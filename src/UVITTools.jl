@@ -51,6 +51,7 @@ help?> nuv_grating_phafile
 """
 module UVITTools
 using FITSIO
+using FITSIO.Libcfitsio
 using DataFrames
 using  Dierckx
 using Measurements

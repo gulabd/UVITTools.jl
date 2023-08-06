@@ -81,7 +81,7 @@ function fuv_grating1_count_spec(fuv_grating1_image_file::String, ds9regfile::St
 		ycen_m2 = m * xcen_m2 +  c
 		xsize_m2 = -413 + 629 + 1
 		ysize_m2 = cross_disp_width_pixels
-		println([xcen_m2, ycen_m2, xsize_m2, ysize_m2])
+	#	println([xcen_m2, ycen_m2, xsize_m2, ysize_m2])
 		reg = """# Region file format: DS9 version 4.1
 		global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
 		physical
@@ -599,10 +599,10 @@ function fuv_grating1_phafile(target::String, fuv_grating1_image_file::String, d
 	# Find correct response file
 	respdir = joinpath(dirname(dirname(pathof(UVITTools))), "caldata")
 	if  order==-2
-			rmffile=respdir * "fuv_grating1_m2_12nov22.rmf"
+			rmffile=joinpath(respdir, "fuv_grating1_m2_12nov22.rmf")
 			println("Using respfile", rmffile)
 	elseif  order==-1
-			rmffile=respdir * "fuv_grating1_m1_3oct19.rmf"
+			rmffile=joinpath(respdir, "fuv_grating1_m1_3oct19.rmf")
 			println("Using respfile", rmffile)
 	else
 		print("Detector/Grating not recognised, see http://uvit.iiap.res.in/Instrument")

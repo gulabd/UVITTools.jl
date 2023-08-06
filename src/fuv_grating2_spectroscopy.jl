@@ -621,9 +621,9 @@ function fuv_grating2_phafile(target::String,fuv_grating2_image_file::String,ds9
 # Find correct response file
 	respdir = joinpath(dirname(dirname(pathof(UVITTools))), "caldata")
 	if  order==-2
-        	rmffile=respdir * "fuv_grating2_m2_12nov22.rmf"
+        	rmffile=joinpath(respdir, "fuv_grating2_m2_12nov22.rmf")
 	elseif  order==-1
-        	rmffile=respdir *"fuv_grating2_m1_3oct19.rmf"
+        	rmffile=joinpath(respdir, "fuv_grating2_m1_3oct19.rmf")
 	else
     	print("Detector/Grating not recognised, see http://uvit.iiap.res.in/Instrument")
     	print("rmf/arf filenames not updated in the PHA header.")
