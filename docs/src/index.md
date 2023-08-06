@@ -17,7 +17,7 @@ The `UVITTools.jl` package has been designed to use the processed UVIT data gene
 
 The [CCDLAB pipeline](https://ui.adsabs.harvard.edu/abs/2017PASP..129k5002P/abstract) has the option of generating images from the grating observations either in the detector coordinates left unrotated or rotated to align the dispersion axis with the X-axis.  The 1d spectral extraction functions for the FUV gratings (`fuv_grating1_count_spec` and `fuv_grating2_count_spec`) include two parameters `disp_aligned_to_xaxis` and `angle_xaxis_disp_deg` ($\theta$) that can be used to specify if the grating images are rotated and the angle between the X-axis and the dispersion direction towards the negative orders (for more details, please see the function documentation). The default values of the angles should work fine, otherwise users can measure the angle of the dispersion direction towards negative orders with respect to the X-axis and specify in the command line. 
 
-The 1d spectral extraction tools construct a linear relation $y = mx +c$  with  ($m = \tan{\theta}$) that defines the  spectral trace. The coordinates along the dispersion direction are defined relative to the zero order position provided by the user in the form of a [SAOImage/DS9](https://sites.google.com/cfa.harvard.edu/saoimageds9/download)  region file. The 1d count spectrum is then extracted by integrating the counts along the spatial direction within a cross dispersion width provided by the user.
+The 1d spectral extraction tools construct a linear relation $y = mx +c$  (with  $m = \tan{\theta}$) that defines the  spectral trace. The coordinates along the dispersion direction are defined relative to the zero order position provided by the user in the form of a [SAOImage/DS9](https://sites.google.com/cfa.harvard.edu/saoimageds9/download)  region file. The 1d count spectrum is then extracted by integrating the counts along the spatial direction within a cross dispersion width provided by the user.
 
 The following steps can be followed to generate 1d count spectrum of a source from a grating image generated with the CCDLAB pipeline.
 
@@ -44,11 +44,7 @@ The following steps can be followed to generate 1d count spectrum of a source fr
 
 ### Wavelength Calibration
 
-The relative pixel coordinates along the dispersion direction are converted using linear dispersion relations 
-$$
-\lambda = c_0 + c_1 \times pixel,
-$$
-where the coefficients $c_0$ and $c_1$ are derived from wavelength calibration based on observations of the planetary nebula NGC40. The UVITToools.jl functions  ` fuv_grating1_pixel2lamA`, `fuv_grating1_wavelength_calib` for FUV-Grating1 and similar functions for other gratings use updated wavelength calibrations compared to those provided in [Dewangan (2021)](https://link.springer.com/article/10.1007/s12036-021-09691-w).
+The relative pixel coordinates along the dispersion direction are converted using linear dispersion relations $\lambda = c_0 + c_1 \times pixel$, where the coefficients $c_0$ and $c_1$ are derived from wavelength calibration based on observations of the planetary nebula NGC40. The UVITToools.jl functions  ` fuv_grating1_pixel2lamA`, `fuv_grating1_wavelength_calib` for FUV-Grating1 and similar functions for other gratings use updated wavelength calibrations compared to those provided in [Dewangan (2021)](https://link.springer.com/article/10.1007/s12036-021-09691-w).
 
 One can convert the relative pixel coordinates to wavelength using the command
 
