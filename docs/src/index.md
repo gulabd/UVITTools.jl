@@ -31,7 +31,7 @@ The following steps can be followed to generate 1d count spectrum of a source fr
   
   ```
 
-  In addition to the screen output, a DS9 region file used for the grating order and the cpunt spectrum are written to files `src_fuv_grating1_m2.reg` and `src_fuv_grating1_m2_count_spec.dat`. The region files can be loaded in DS9 to cross-check the used grating order. 
+  In addition to the screen output, a DS9 region file used for the grating order and the count spectrum are written to files `src_fuv_grating1_m2.reg` and `src_fuv_grating1_m2_count_spec.dat`. The region files can be loaded in DS9 to cross-check the used grating order. 
 
   Similarly, one can use the function `fuv_grating1_net_countrate_spec` to extract the background-corrected net count rate spectrum of a source by additionally using a DS9 region background file.
 
@@ -145,7 +145,7 @@ Mean BJD: 2.457588076583e6
 
 ### Saturation correction
 
-The FUV/NUV channels operate in the photon counting mode. If multiple photon events fall within $3\times 3$ pixels in a frame, then these photon events can be detected individually but recorded as arising due to a single photon. Such saturation of photon events cannot be avoided unless the photon rate per frame is much less than 1. Tandon et al. ([2017](https://iopscience.iop.org/article/10.3847/1538-3881/aa8451),[2020](https://iopscience.iop.org/article/10.3847/1538-3881/ab72a3)) have devised an algorithm to correct for the saturation.  This algorithm is implemented in the `UVITTools.jl` function `uvit_saturation_corr`, which is called by the aperture photometry task `uvit_aphot` if the option for saturation correction is provided. The algorithm for the saturation correction is applicable to point sources only, and users need to use a circular extraction region of radius about 12 arcsec (see [Tandon et al. 2020](https://iopscience.iop.org/article/10.3847/1538-3881/ab72a3) for details).
+The FUV/NUV channels operate in the photon counting mode. If multiple photon events fall within $3\times 3$ pixels in a frame, then these photon events can not be detected individually but recorded as arising due to a single photon. Such saturation of photon events cannot be avoided unless the photon rate per frame is much less than 1. Tandon et al. ([2017](https://iopscience.iop.org/article/10.3847/1538-3881/aa8451),[2020](https://iopscience.iop.org/article/10.3847/1538-3881/ab72a3)) have devised an algorithm to correct for the saturation.  This algorithm is implemented in the `UVITTools.jl` function `uvit_saturation_corr`, which is called by the aperture photometry task `uvit_aphot` if the option for saturation correction is provided. The algorithm for the saturation correction is applicable to point sources only, and users need to use a circular extraction region of radius about 12 arcsec (see [Tandon et al. 2020](https://iopscience.iop.org/article/10.3847/1538-3881/ab72a3) for details).
 
 ### XSPEC/Sherpa compatible single channel spectral data and responses
 
