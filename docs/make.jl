@@ -13,5 +13,5 @@ makedocs(
                ])
 deploydocs(;
     repo="github.com/gulabd/UVITTools.jl.git",
-    devbranch = "main"
+    push_preview = true
 )
