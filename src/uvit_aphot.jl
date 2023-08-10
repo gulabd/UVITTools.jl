@@ -95,7 +95,7 @@ function uvit_aphot(imagefile::String,ds9srcregion::String, ds9bgdregion::String
 			theta_rad = -(180.0-theta) * π/180.0
 		elseif theta > 180.0 && theta <= 270.0
 			theta_rad = (theta - 180.0) * π/180.0
-		else theta > 270.0
+		else theta > 270.0/home/gulabd/work/julia_dev/UVITTools
 			theta_rad = -(360.0 - theta) * π/180.0
 		end
 		println([xcen,ycen,major_radius,minor_radius,theta_rad])
@@ -171,7 +171,7 @@ function uvit_aphot(imagefile::String,ds9srcregion::String, ds9bgdregion::String
 
 
 	src_count_rate = measurement(src_counts/exposure_time_sec, sqrt(src_counts)/exposure_time_sec)
-	bgd_count_rate = measurement(scl_bgd_counts/exposure_time_sec, sqrt(bgd_counts) * (src_area / bgd_area) / exposure_time_sec)
+	bgd_count_rate = measurement(scl_bgd_counts/exposure_time_sec, (sqrt(bgd_counts) * (src_area / bgd_area)) / exposure_time_sec)
 	#err_bgd_count_rate = sqrt(bgd_counts) * (src_area / bgd_area) / exposure_time_sec
 	net_count_rate = measurement((src_counts - scl_bgd_counts)/exposure_time_sec, sqrt((Measurements.uncertainty(src_count_rate))^2 + (Measurements.uncertainty(bgd_count_rate))^2))
 	if srcreg[1]=="circle" && satu_corr == true
@@ -276,8 +276,8 @@ the following line of code based on 2017 calibration are not required.
 	println("Filter: ", uvit_filter)
 	println("Exposure time: ", round(exposure_time_sec; digits=1), " seconds")
 #	println("Mean MST: ", time_meanmst)
-	println("source+background rate = ", round(src_count_rate,digits=3)," counts/s")
-	println("background rate = ", round(bgd_count_rate,digits=3),  " counts/s")
+	println("source+background rate = ", round(src_count_rate,digits=4)," counts/s")
+	println("background rate = ", round(bgd_count_rate,digits=4),  " counts/s")
 	
 	if srcreg[1]=="circle" && satu_corr == true
 		println("net source count rate = ", round(net_count_rate,digits=3), " counts/s")
@@ -309,7 +309,7 @@ the following line of code based on 2017 calibration are not required.
 		return  time_meanbjd, Measurements.value(net_count_rate), Measurements.uncertainty(net_count_rate)
 	end
  else
-	println("Requested time col not available, returnin time in bjd")
+	println("Requested time col not available, return in time in bjd")
 	if srcreg[1]=="circle" && satu_corr == true
 		return  time_meanbjd, Measurements.value(net_count_rate_satu_corr), Measurements.uncertainty(net_count_rate_satu_corr)
 	else

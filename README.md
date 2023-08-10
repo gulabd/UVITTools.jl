@@ -8,23 +8,16 @@ A package for AstroSat/UVIT grating spectroscopy and aperture photometry.
 [![Coverage](https://codecov.io/gh/gulabd/UVITTools.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/gulabd/UVITTools.jl)
 
 ## Installation
+`UVITTools.jl`  is available for Julia 1.9 and later versions, and can be installed with Julia built-in package manager.
 
-```julia
-julia> using Pkg
-
-julia> Pkg.add(url="https://github.com/gulabd/UVITTools.jl")
-```
-or
 ```julia
 julia>]
 
 (@v1.6) pkg> add UVITTools
 ```
 
-
-
 ## Usage
-`UVITTools` allows FUV/NUV grating spectroscopy and aperture photometry of astronomical sources observed with the [Ultra-Violet Imaging Telescope (UVIT)](https://uvit.iiap.res.in/) on-board the Indian space observatory [*AstroSat*](https://www.isro.gov.in/AstroSat.html).  The package is compatible with the processed data generated  with the [CCDLAB pipeline](https://iopscience.iop.org/article/10.1088/1538-3873/aa8800). Check the [latest documentation here](https://gulabd.github.io/UVITTools.jl/dev/).
+`UVITTools.jl` allows FUV/NUV grating spectroscopy and aperture photometry of astronomical sources observed with the [Ultra-Violet Imaging Telescope (UVIT)](https://uvit.iiap.res.in/) on-board the Indian space observatory [*AstroSat*](https://www.isro.gov.in/AstroSat.html).  The package is compatible with the processed data generated  with the [CCDLAB pipeline](https://iopscience.iop.org/article/10.1088/1538-3873/aa8800). Check the [latest documentation here](https://gulabd.github.io/UVITTools.jl/dev/).
 
 ```julia
 julia> using UVITTools
@@ -38,47 +31,45 @@ List of tool to analyze data from the AstroSat/UVIT payload.
 
 
 ## Grating Spectroscopy
-- `xycen_from_ds9reg`
-- `write_uvit_grating_phafile`
-- `fuv_grating1_count_spec `
-- `fuv_grating1_net_countrate_spec`
-- `fuv_grating1_pixel2lamA ` 
-- `fuv_grating1_wavelength_calib `
-- `fuv_grating1_flux_calib `
-- `fuv_grating1_fluxed_spec `
-- `fuv_grating1_phafile `
-- `fuv_grating1_ea`
-- `fuv_grating2_count_spec `
-- `fuv_grating2_net_countrate_spec `
-- `fuv_grating2_pixel2lamA `
-- `fuv_grating2_wavelength_calib `
-- `fuv_grating2_flux_calib`
-- `fuv_grating2_fluxed_spec`
-- `fuv_grating2_phafile `
-- `fuv_grating2_ea`
-- `nuv_grating_m1_count_spec `
-- `nuv_grating_m1_net_countrate_spec `
-- `nuv_grating_m1_wavelength_calib `
-- `nuv_grating_m1_flux_calib `
-- `nuv_grating_m1_fluxed_spec`
-- `nuv_grating_phafile`
-
+- `xycen_from_ds9reg`: Read x,y centre for DS9 circular region file.
+- `write_uvit_grating_phafile`: Write PHA spectral file for UVIT gratings.
+- `fuv_grating1_count_spec`: Extract 1d count spectrum from FUV-Grating1 image file.
+- `fuv_grating1_net_countrate_spec`: Derive background-corrected net count rate spectrum from FUV-Grating1 image.
+- `fuv_grating1_pixel2lamA` : Convert FUV-Grating1 pixel numbers relative to zero order position into wavelength in Å.
+- `fuv_grating1_wavelength_calib`: Perform wavelength calibration of FUV-Grating1 count sectrum.
+- `fuv_grating1_flux_calib`: Perform flux calibration of FUV-Grating1 wavelength-calibrated count spectrum.
+- `fuv_grating1_fluxed_spec`: Generate wavelength and flux calibrated spectrum from FUV-Grating1 images.
+- `fuv_grating1_phafile`: Generate PHA spectral files from FUV-Grating1 images.
+- `fuv_grating1_ea` : Print FUV-Grating1 effective area.
+- `fuv_grating2_count_spec` : Extract 1d count spectrum from FUV-Grating2 image file.
+- `fuv_grating2_net_countrate_spec`: Derive background-corrected net count rate spectrum from FUV-Grating2 image.
+- `fuv_grating2_pixel2lamA`:  Convert FUV-Grating2 pixel numbers relative to zero order position into wavelength in Å.
+- `fuv_grating2_wavelength_calib`: Perform wavelength calibration of FUV-Grating2 count sectrum.
+- `fuv_grating2_flux_calib`: Perform flux calibration of FUV-Grating2 wavelength-calibrated count spectrum.
+- `fuv_grating2_fluxed_spec`: Generate wavelength and flux calibrated spectrum from FUV-Grating2 images.
+- `fuv_grating2_phafile`: Generate PHA spectral files from FUV-Grating2 images.
+- `fuv_grating2_ea`: Print FUV-Grating1 effective area.
+- `nuv_grating_m1_count_spec`: Extract 1d count spectrum from NUV-Grating image file.
+- `nuv_grating_m1_net_countrate_spec`: Derive background-corrected net count rate spectrum from NUV-Grating image.
+- `nuv_grating_m1_wavelength_calib`: Perform wavelength calibration of NUV-Grating count sectrum.
+- `nuv_grating_m1_flux_calib`: Perform flux calibration of NUV-Grating wavelength-calibrated count spectrum.
+- `nuv_grating_m1_fluxed_spec`: Generate wavelength and flux calibrated spectrum from NUV-Grating images.
+- `nuv_grating_phafile`: Generate PHA spectral files from NUV-Grating images.
 
 ##  UVIT Photometry 
-- `read_ds9reg`
-- `uvit_aphot `
-- `uvit_countrate2flux `
-- `uvit_filter2pha`
-- `uvit_saturation_corr`
-- `uvit_zp_uc`
+- `read_ds9reg` : 	Read DS9 region file.
+- `uvit_aphot ` : Perform aper photometry on UVIT images in any of the broadband filters.
+- `uvit_countrate2flux`: Convert count rate to flux density for any filter.
+- `uvit_filter2pha`: Generate source and PHA spectral files compatible with XSPEC from UVIT images in any of the filters.
+- `uvit_saturation_corr` : Perform saturation correction.
+- `uvit_zp_uc`: Print magnitude zero point and unit conversion factor using Tandon et al. 2020.
+
 
 ## Unit conversions
-- `lambdaA2keV`
-- `lambdaA2ergs`
-- `flux_density_photons2cgs`
-- `flux_density_cgs2photons`
-
-
+- `lambdaA2keV` : Convert wavelengh in Å to energy in keV.
+- `lambdaA2ergs` : Convert λ in Å to energy in ergs.
+- `flux_density_photons2cgs` : Convert photon flux density n_λ (photons/cm2/s/Å) to energy flux density f_λ (ergs/cm2/s/Å).
+- `flux_density_cgs2photons` : Convert flux density f_λ (ergs/cm2/s/Å) to photon number density n_λ (photons/cm2/s/Å).
 
 To see the help for any tool (e.g., `nuv_grating_phafile`), type
 
@@ -97,7 +88,7 @@ Detector: FUV
 Filter: BaF2
 Exposure time: 17129.3 seconds
 source+background rate = 4.2 ± 0.016 counts/s
-background rate = 0.051 ± 0.0 counts/s
+background rate = 0.0511 ± 0.0004 counts/s
 net source count rate = 4.149 ± 0.016 counts/s
 Saturation corrected net source count rate= 4.452 ± 0.016 counts/s
 Saturation corrected f_λ [BaF2]= 1.591e-14 ± 1.6e-16 ergs/cm2/s/A
