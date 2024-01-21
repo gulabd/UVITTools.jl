@@ -578,10 +578,16 @@ function fuv_grating1_phafile(target::String, fuv_grating1_image_file::String, d
   else
       println("Grating order not calibrated")
   end
-  
+  if uvit_grating == "Grating1"
+	uvit_g = "G1"
+  elseif uvit_grating == "Grating2"
+	uvit_g = "G2"
+  elseif uvit_grating == "Grating"
+	uvit_g = "G"
+  end
 
-  srcphafile = target * "_" * obsid * "_" * uvit_detector * "_" * uvit_grating * "_" * gorder * "_"  * "crossdisp" * string(cross_disp_width_pixels) *  "pix_" * "xax_disp_" * string(angle_xaxis_disp_deg) * "deg_src.pha"
-  bgdphafile = target * "_" * obsid * "_" * uvit_detector * "_" * uvit_grating * "_" * gorder * "_" * "crossdisp" * string(cross_disp_width_pixels) *  "pix_" * "xax_disp_" * string(angle_xaxis_disp_deg) * "deg_bgd.pha"
+  srcphafile = target * "_" * obsid * "_" * uvit_detector * "_" * uvit_g * gorder * "_"  * "cd" * string(cross_disp_width_pixels) *  "pix_" * "xaxd" * string(convert(Int, round(angle_xaxis_disp_deg))) * "deg_src.pha"
+  bgdphafile = target * "_" * obsid * "_" * uvit_detector * "_" * uvit_g * gorder * "_" * "cd" * string(cross_disp_width_pixels) *  "pix_" * "xaxd" * string(convert(Int,round(angle_xaxis_disp_deg))) * "deg_bgd.pha"
 	#Extract 1d count spectrum
    	(pixels, src_count_spec) = fuv_grating1_count_spec(fuv_grating1_image_file, ds9srcregfile,  order=order, cross_disp_width_pixels = cross_disp_width_pixels, angle_xaxis_disp_deg=angle_xaxis_disp_deg, rate = false)
    	(pixels_bgd, bgd_count_spec) = fuv_grating1_count_spec(fuv_grating1_image_file,  ds9bgdregfile, order=order, cross_disp_width_pixels = cross_disp_width_pixels, angle_xaxis_disp_deg=angle_xaxis_disp_deg, rate = false)
@@ -599,22 +605,26 @@ function fuv_grating1_phafile(target::String, fuv_grating1_image_file::String, d
 	# Find correct response file
 	respdir = joinpath(dirname(dirname(pathof(UVITTools))), "caldata")
 	if  order==-2
-			rmffile=joinpath(respdir, "fuv_grating1_m2_12nov22.rmf")
-			println("Using respfile", rmffile)
+			respfile="fuv_grating1_m2_12nov22.rmf"
+			respfilefullpath=joinpath(respdir, respfile)
+			cp(respfilefullpath, joinpath(pwd(),  respfile), force=true)
+			println("Using respfile", respfile)
 	elseif  order==-1
-			rmffile=joinpath(respdir, "fuv_grating1_m1_3oct19.rmf")
-			println("Using respfile", rmffile)
+			respfile="fuv_grating1_m1_3oct19.rmf"
+			rmffile=joinpath(respdir, respfile)
+			cp(respfilefullpath, joinpath(pwd(),  respfile), force=true)
+			println("Using respfile", respfile)
 	else
 		print("Detector/Grating not recognised, see http://uvit.iiap.res.in/Instrument")
 		print("rmf/arf filenames not updated in the PHA header.")
 		rmffile="NONE"
 	#	arffile="NONE"
 	end
-	println("Using $rmffile")
+	println("Using $respfile")
 	f=fits_open_file(srcphafile, +1)
 	fits_movabs_hdu(f,2)
 	fits_update_key(f,"BACKFILE",bgdphafile,"Background pha file")
-	fits_update_key(f,"RESPFILE",rmffile,"Response matrix with effective area")
+	fits_update_key(f,"RESPFILE",respfile,"Response with effective area")
 	fits_close_file(f)
 
 		return src_pha_file_written, bgd_pha_file_written

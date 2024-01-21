@@ -34,7 +34,7 @@ and spectral responses, see [Dewangan (2021)](https://ui.adsabs.harvard.edu/abs/
 - Some relevant information are also printed on the screen.
 ...
 """
-function uvit_filter2pha(target::String,imagefile::String,ds9srcregion::String, ds9bgdregion::String; satu_corr::Bool=true, respdir::String="/soft/astrosat/resp/uvit/")
+function uvit_filter2pha(target::String,imagefile::String,ds9srcregion::String, ds9bgdregion::String; satu_corr::Bool=true)
 	im_id = FITS(imagefile)
 #	im_data = transpose(read(im_id[1]))
 	im_data = read(im_id[1])
@@ -49,62 +49,6 @@ function uvit_filter2pha(target::String,imagefile::String,ds9srcregion::String, 
 # Read source and background region files
 	srcreg = read_ds9reg(ds9srcregion)
 	bgdreg = read_ds9reg(ds9bgdregion)
-
-	#= OLDER CODE that utilised AperturePhotometry.jl
-	if srcreg[1]=="circle"
-		xcen = srcreg[2]
-		ycen = srcreg[3]
-		radius = srcreg[4]
-	    (src_counts, err_src_counts) = 	sum_circle(im_data,xcen,ycen, radius)
-	#    println(src_counts)
-	    src_area = pi * radius^2
-	elseif srcreg[1]=="annulus"
-		xcen = srcreg[2]
-		ycen = srcreg[3]
-		inner_radius = srcreg[4]
-		outer_radius = srcreg[5]
-		(src_counts, err_src_counts) = 	sum_circann(im_data,xcen,ycen, inner_radius, outer_radius)
-		src_area = pi * (outer_radius^2 - inner_radius^2)
-	elseif srcreg[1]=="ellipse"
-		xcen = srcreg[2]
-		ycen = srcreg[3]
-		major_radius = srcreg[4]
-		minor_radius = srcreg[5]
-		theta = srcreg[6]
-		(src_counts, err_src_counts) = sum_ellipse(im_data,xcen,ycen,major_radius,minor_radius,theta)
-		src_area = pi * major_radius * minor_radius
-	else
-		println("Source region not recognized")
-		return 0
-	end
-
-	if bgdreg[1]=="circle"
-		xcen_b = bgdreg[2]
-		ycen_b = bgdreg[3]
-		radius_b = bgdreg[4]
-	    (bgd_counts, err_bgd_counts) = 	sum_circle(im_data,xcen_b,ycen_b, radius_b)
-	    bgd_area = pi * radius_b^2
-	elseif bgdreg[1]=="annulus"
-		xcen_b = bgdreg[2]
-		ycen_b = bgdreg[3]
-		inner_radius_b = bgdreg[4]
-		outer_radius_b = bgdreg[5]
-		(bgd_counts, err_bgd_counts) = 	sum_circann(im_data,xcen_b,ycen_b, inner_radius_b,outer_radius_b)
-		bgd_area = pi * (outer_radius_b^2  - inner_radius_b^2)
-	elseif bgdreg[1]=="ellipse"
-		xcen_b = bgdreg[2]
-		ycen_b = bgdreg[3]
-		major_radius_b = bgdreg[4]
-		minor_radius_b = bgdreg[5]
-		theta_b = bgdreg[6]
-		(bgd_counts, err_bgd_counts) = sum_ellipse(im_data,xcen_b,ycen_b,major_radius_b,minor_radius_b,theta_b)
-		bgd_area = pi * major_radius_b * minor_radius_b
-	else
-		print("Background region not recognized")
-		return 0
-	end
-    scl_bgd_counts = bgd_counts * (src_area / bgd_area)
-	=#
 
 	if srcreg[1]=="circle"
 		xcen = srcreg[2]
@@ -133,26 +77,6 @@ function uvit_filter2pha(target::String,imagefile::String,ds9srcregion::String, 
 		minor_radius = srcreg[5]
 		theta = srcreg[6]
 		aper =  EllipticalAperture(xcen, ycen, major_radius, minor_radius, theta)
-		#=  OLDDER code
-		AperPhotometry requires theta measured w.r.t. to +X-axis in radians 
-		and in the range of -pi/2 <= theta <= pi/2
-
-		The angle in the ds9 ellipse region is measured from the positive axis.
-		=#
-
-		#=  Older code that utlised AperPhotometry
-		if theta <= 90.0
-			theta_rad = theta * π/180.0
-		elseif theta > 90.0 && theta <= 180.0
-			theta_rad = -(180.0-theta) * π/180.0
-		elseif theta > 180.0 && theta <= 270.0
-			theta_rad = (theta - 180.0) * π/180.0
-		else theta > 270.0
-			theta_rad = -(360.0 - theta) * π/180.0
-		end
-		println([xcen,ycen,major_radius,minor_radius,theta_rad])
-		=#
-	#	(src_counts, err_src_counts) = sum_ellipse(im_data,xcen,ycen,major_radius,minor_radius,theta_rad)
 		src_area = pi * major_radius * minor_radius
 	else
 		println("Source region not recognized")
@@ -163,14 +87,6 @@ function uvit_filter2pha(target::String,imagefile::String,ds9srcregion::String, 
 	src_counts = photometry(aper, im_data).aperture_sum
 	err_src_counts = sqrt(src_counts)
 
-	#if satu_corr == true
-		# Saturation correction should be applied only for point sources, and use circular region of 12arcsec radius or about 29 pixels.
-	# Apply saturation correction
-	#	src_counts_satu_corr = uvit_saturation_corr(src_counts/exposure_time_sec, frames_per_sec=frampers) * exposure_time_sec
-	#	err_src_counts_satu_corr = 	err_src_counts * (src_counts_satu_corr / src_counts)
-	#else
-	#	println("Saturation correction not applied")
-	#end
 
 	if bgdreg[1]=="circle"
 		xcen_b = bgdreg[2]
@@ -194,18 +110,6 @@ function uvit_filter2pha(target::String,imagefile::String,ds9srcregion::String, 
 		minor_radius_b = bgdreg[5]
 		theta_b = bgdreg[6]
 		aper_b =  EllipticalAperture(xcen_b, ycen_b, major_radius_b, minor_radius_b, theta_b)
-	#ds9 ellipse region theta in degrees to Julia region angle in radians.
-	#=	if theta_b <= 90.0
-			theta_b_rad = theta_b * π/180.0
-		elseif theta_b > 90.0 && theta_b <= 180.0
-			theta_b_rad = -(180.0-theta_b) * π/180.0
-		elseif theta_b > 180.0 && theta_b <= 270.0
-			theta_b_rad = (theta_b - 180.0) * π/180.0
-		else theta_b > 270.0
-			theta_b_rad = -(360.0 - theta_b) * π/180.0
-		end
-	=#
-	#	(bgd_counts, err_bgd_counts) = sum_ellipse(im_data,xcen_b,ycen_b,major_radius_b,minor_radius_b,theta_b_rad)
 		bgd_area = pi * major_radius_b * minor_radius_b
 	else
 		print("Background region not recognized")
@@ -238,20 +142,58 @@ function uvit_filter2pha(target::String,imagefile::String,ds9srcregion::String, 
 		# Treat saturatation corrected source counts as the true source counts
 		src_counts = src_counts_satu_corr
 	end
-	println("--------------------------------")
-	println("---Writing PHA file-----")
-	srcphafile = target * "_" * obsid * "_" * detector * "_" * filter *  "_spec_src.pha"
-    bgdphafile = target * "_" * obsid * "_" * detector * "_" * filter * "_spec_bgd.pha"
-	srcphafile_written = write_uvit_phafile(detector,filter,src_counts,exposure_time_sec;phafile=srcphafile)
-	# Use scaled background counts for the same source and background extraction area
- 	bgdphafile_written = write_uvit_phafile(detector,filter,scl_bgd_counts,exposure_time_sec;phafile=bgdphafile)
- # Update background phafile in the header of source phafile
- 
+	
 
-		srcpha = fits_open_file(srcphafile,+1)
-		fits_movabs_hdu(srcpha,2)
-		#fits_write_key(srcpha, "BACKFILE", bgdphafile, "Associated background file")
-		fits_update_key(srcpha,"BACKFILE",bgdphafile,"Background pha file")
-    fits_close_file(srcpha)
-	return srcphafile_written, bgdphafile_written
+# Indeitify the correct response file for a particular filter
+ 	if filter=="F1" || filter=="F148W" || filter=="CaF2-1"
+		respfile="F148W_effarea_Tandon_etal2020.rsp"
+	elseif filter== "F2" || filter=="F154W" || filter=="BaF2"
+		respfile="F154W_effarea_Tandon_etal2020.rsp"
+	elseif filter=="F3" || filter=="F169M" || filter=="Sapphire"
+		respfile="F169M_effarea_Tandon_etal2020.rsp"
+	elseif filter=="F5" || filter=="F172M" || filter=="Silica"
+		respfile="F172M_effarea_Tandon_etal2020.rsp"
+	elseif filter=="F7" || filter=="F148Wa" || filter=="CaF2-2"
+		respfile="NONE"
+	elseif filter=="F1" || filter=="N242W" || filter=="Silica-1"
+		respfile="N242W_effarea_Tandon_etal2020.rsp"
+	elseif filter=="F2" || filter=="N219M" || filter=="NUVB15"
+		respfile="N219M_effarea_Tandon_etal2020.rsp"
+	elseif filter=="F3" || filter=="N245M" || filter=="NUVB13"
+		respfile="N245M_effarea_Tandon_etal2020.rsp"
+	elseif filter=="F5" || filter=="N263M" || filter=="NUVB4"
+		respfile="N263M_effarea_Tandon_etal2020.rsp"
+	elseif filter=="F6" || filter=="N279N" || filter=="NUVN2"
+		respfile="N279N_effarea_Tandon_etal2020.rsp"
+	elseif filter=="F7" || filter=="N242Wa" || filter=="Silica-2"
+		respfile="NONE"
+	else 
+		print("Filter name not recognised, see http://uvit.iiap.res.in/Instrument/Filters")
+		print("rmf/arf filenames not updated in the PHA header.")
+		respfile="NONE"
+	end
+
+respdir = joinpath(dirname(dirname(pathof(UVITTools))), "caldata")
+if respfile=="NONE" 
+	respfilefullpath=" "
+else
+	respfilefullpath = joinpath(respdir, respfile)
+end
+
+println("--------------------------------")
+println("---Writing PHA file-----")
+srcphafile = target * "_" * obsid * "_" * detector * "_" * filter *  "_spec_src.pha"
+bgdphafile = target * "_" * obsid * "_" * detector * "_" * filter * "_spec_bgd.pha"
+srcphafile_written = write_uvit_phafile(detector,filter,src_counts,exposure_time_sec;phafile=srcphafile)
+# Use scaled background counts for the same source and background extraction area
+bgdphafile_written = write_uvit_phafile(detector,filter,scl_bgd_counts,exposure_time_sec;phafile=bgdphafile)
+
+# Update background phafile and response file in the header of source phafile
+srcpha = fits_open_file(srcphafile,+1)
+fits_movabs_hdu(srcpha,2)
+fits_update_key(srcpha,"BACKFILE",bgdphafile,"Background pha file")
+cp(respfilefullpath, joinpath(pwd(),  respfile), force=true)
+fits_update_key(srcpha, "RESPFILE", respfile, "Response file, includes effective area" )
+fits_close_file(srcpha)
+return srcphafile_written, bgdphafile_written
 end

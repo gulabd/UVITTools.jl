@@ -9,7 +9,7 @@
 
 #using FITSIO
 
-function write_uvit_phafile(uvit_detector::String, uvit_filter::String,counts, exptime_sec::Float64; phafile::String="phafile.pha",respdir::String="/soft/astrosat/responses/uvit/")
+function write_uvit_phafile(uvit_detector::String, uvit_filter::String,counts, exptime_sec::Float64; phafile::String="phafile.pha")
 
 
 # Define FITS pha keyword
@@ -27,73 +27,6 @@ function write_uvit_phafile(uvit_detector::String, uvit_filter::String,counts, e
 	pha_header["FILTER"]=uvit_filter
 #	pha_header["DATE"]=Dates.now(Dates.UTC)
 #	set_comment!(pha_header, "DATE", "file creation date (YYYY-MM-DDThh:mm:ss UTC")
-# Update rmf/arf files in the pha header
-   
-		if uvit_filter=="F1" || uvit_filter=="F148W" || uvit_filter=="CaF2-1"
-			respfile="F148W_effarea_Tandon_etal2020.rsp"
-   # 	rmffile="uvit_fuv_caf21.rmf"
-   # 	arffile="uvit_fuv_caf21_updated.arf"
-
-		elseif uvit_filter== "F2" || uvit_filter=="F154W" || uvit_filter=="BaF2"
-			respfile="F154W_effarea_Tandon_etal2020.rsp"
-    #	rmffile="uvit_fuv_baf2.rmf"
-    #	arffile="uvit_fuv_baf2_updated.arf"
-		elseif uvit_filter=="F3" || uvit_filter=="F169M" || uvit_filter=="Sapphire"
-			respfile="F169M_effarea_Tandon_etal2020.rsp"
-   # 	rmffile="uvit_fuv_saph.rmf"
-   # 	arffile="uvit_fuv_saph_updated.arf"
-		elseif uvit_filter=="F5" || uvit_filter=="F172M" || uvit_filter=="Silica"
-			respfile="F172M_effarea_Tandon_etal2020.rsp"
-   # 	rmffile="uvit_fuv_sil.rmf"
-   # 	arffile="uvit_fuv_sil_updated.arf"
-		elseif uvit_filter=="F7" || uvit_filter=="F148Wa" || uvit_filter=="CaF2-2"
-			respfile="NONE"
-    #	rmffile="uvit_fuv_caf22.rmf"
-    #	arffile="uvit_fuv_caf22_updated.arf"
-    
-
-		elseif uvit_filter=="F1" || uvit_filter=="N242W" || uvit_filter=="Silica-1"
-			respfile="N242W_effarea_Tandon_etal2020.rsp"
-    #	rmffile="NONE"
-    #	arffile="NONE"
-		elseif uvit_filter=="F2" || uvit_filter=="N219M" || uvit_filter=="NUVB15"
-			respfile="N219M_effarea_Tandon_etal2020.rsp"
-    #	rmffile="uvit_nuv_b15.rmf"
-    #	arffile="uvit_nuv_b15_updated.arf"
-   
-		elseif uvit_filter=="F3" || uvit_filter=="N245M" || uvit_filter=="NUVB13"
-			respfile="N245M_effarea_Tandon_etal2020.rsp"
-    #	rmffile="uvit_nuv_b13.rmf"
-    #	arffile="uvit_nuv_b13_updated.arf"
-    
-
-		elseif uvit_filter=="F5" || uvit_filter=="N263M" || uvit_filter=="NUVB4"
-			respfile="N263M_effarea_Tandon_etal2020.rsp"
-	#	rmffile="uvit_nuv_b4.rmf"
-    #	arffile="uvit_nuv_b4_updated.arf"
-    
-		elseif uvit_filter=="F6" || uvit_filter=="N279N" || uvit_filter=="NUVN2"
-			respfile="N279N_effarea_Tandon_etal2020.rsp"
-	#	rmffile="uvit_nuv_n2.rmf"
-   # 	arffile="uvit_nuv_n2_updated.arf"
-    elseif uvit_filter=="F7" || uvit_filter=="N242Wa" || uvit_filter=="Silica-2"
-		rmffile="NONE"
-    	arffile="NONE"
-    else 
-    	print("Filter name not recognised, see http://uvit.iiap.res.in/Instrument/Filters")
-    	print("rmf/arf filenames not updated in the PHA header.")
-    	rmffile="NONE"
-    	arffile="NONE"
-    end
-	respdir = joinpath(dirname(dirname(pathof(UVITTools))), "caldata")
-    if rmffile=="NONE" 
-    	pha_header["RESPFILE"]=" "
-    #	pha_header["ANCRFILE"]=" "
-    else
-    	pha_header["RESPFILE"]=respdir * respfile
-   # 	pha_header["ANCRFILE"]=respdir * arffile
-    end
-    pha_header
 
 # Open new file to write
 	pha = FITS(phafile,"w")
